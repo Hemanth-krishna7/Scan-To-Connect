@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>QR Contact Share</title>
+  <meta charset="UTF-8">
+  <title>QR Contact Experiment</title>
+
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>QR Contact Sharing</h1>
+  <h1> QR Contact Encoding Experiment</h1>
+  <p class="subtitle">
+    Live visualization of contact data encoded into a QR pattern
+  </p>
 
-  <div class="container">
+  <div class="card">
     <input type="text" id="name" placeholder="Enter Name">
-    <input type="text" id="phone" placeholder="Enter Phone Number">
-    <button onclick="generateQR()">Generate QR Code</button>
+    <input type="text" id="phone" placeholder="Enter Phone Number" inputmode="numeric"
+  pattern="[0-9]*">
 
-    <div id="qr"></div>
-
+    <div id="qrBox"></div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode"></script>

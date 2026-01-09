@@ -1,17 +1,42 @@
-// Generate QR Code
-function generateQR() {
-  const name = document.getElementById("name").value;
-  const phone = document.getElementById("phone").value;
+const nameInput = document.getElementById("name");
+const phoneInput = document.getElementById("phone");
+const qrBox = document.getElementById("qrBox");
 
-  const data = `Name: ${name}, Phone: ${phone}`;
+let qr;
 
-  document.getElementById("qr").innerHTML = "";
+phoneInput.addEventListener("input", () => {
+  // Remove non-numeric characters
+  phoneInput.value = phoneInput.value.replace(/[^0-9]/g, "");
 
-  new QRCode(document.getElementById("qr"), {
+  // Limit to 10 digits
+  if (phoneInput.value.length > 10) {
+    phoneInput.value = phoneInput.value.slice(0, 10);
+  }
+});
+
+
+function updateQR() {
+  const name = nameInput.value.trim();
+  const phone = phoneInput.value.trim();
+
+  if (name === "" && phone === "") {
+    qrBox.innerHTML = "";
+    return;
+  }
+
+  const data = `Name: ${name}\nPhone: ${phone}`;
+
+  qrBox.innerHTML = "";
+
+  qr = new QRCode(qrBox, {
     text: data,
     width: 200,
-    height: 200
+    height: 200,
+    colorDark: "#000000",
+    colorLight: "#ffffff"
   });
 }
 
-
+// Live experiment behavior
+nameInput.addEventListener("input", updateQR);
+phoneInput.addEventListener("input", updateQR);

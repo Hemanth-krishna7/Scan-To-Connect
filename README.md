@@ -73,5 +73,3 @@ The project can be deployed easily using GitHub Pages:
 - Support for additional contact fields (email, organization)
 - Dark and light mode toggle
 - Comparative analysis of QR data sizes
-
----

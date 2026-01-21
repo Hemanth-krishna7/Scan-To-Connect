@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan To Connect // SYSTEM</title>
+
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    /* 
+      CYBERPUNK / VIOLET THEME CORE 
+    */
+    body {
+      margin: 0;
+      padding: 20px;
+      padding-top: 50px;
+      background-color: #050005;
+      /* Deep Void Black */
+      color: #bc13fe;
+      /* Neon Violet */
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      /* Start from top */
+
+      /* Tech Grid Pattern */
+      background-image:
+        linear-gradient(rgba(188, 19, 254, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(188, 19, 254, 0.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    /* CRT/Scanline Overlay Effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 2;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+
+    /* Typography & Glows */
+    h1 {
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      text-shadow: 0 0 10px #bc13fe, 0 0 20px #bc13fe;
+      margin-bottom: 5px;
+      font-size: 1.5rem;
+    }
+
+    .subtitle {
+      color: #e0afff;
+      margin-bottom: 30px;
+      font-size: 0.9em;
+      text-shadow: 0 0 5px #bc13fe;
+      letter-spacing: 1px;
+    }
+
+    /* 
+      HEADER TEXT SECTION
+    */
+    .header-container {
+      text-align: center;
+      margin-bottom: 40px;
+      z-index: 3;
+    }
+
+    .welcome-header {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1rem;
+      color: #bc13fe;
+      opacity: 0.8;
+      margin-bottom: 15px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .typewriter-text {
+      font-family: 'Orbitron', 'Courier New', sans-serif;
+      /* Cool Sci-Fi Font */
+      font-size: 2rem;
+      /* Large visibility */
+      font-weight: 700;
+      color: #ffd700;
+      /* Neon Gold */
+      text-shadow: 0 0 10px #ffd700, 0 0 20px #ffea00;
+      min-height: 1.2em;
+      border-right: 3px solid #ffd700;
+      animation: blink-caret 0.75s step-end infinite;
+      max-width: 900px;
+      line-height: 1.3;
+      margin: 0 auto;
+    }
+
+    @keyframes blink-caret {
+
+      from,
+      to {
+        border-color: transparent
+      }
+
+      50% {
+        border-color: #ffd700;
+      }
+    }
+
+    /* 
+      MAIN CARD SECTION
+    */
+    #app-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 5;
+      width: 100%;
+      opacity: 0;
+      /* Fade in on load */
+      animation: fadeIn 1.5s forwards 0.5s;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .card {
+      background: rgba(20, 0, 20, 0.85);
+      /* Slightly more opaque */
+      border: 1px solid #bc13fe;
+      box-shadow: 0 0 15px rgba(188, 19, 254, 0.4);
+      padding: 40px;
+      width: 350px;
+      max-width: 90vw;
+      position: relative;
+      backdrop-filter: blur(5px);
+    }
+
+    /* Cyberpunk Corner Accents */
+    .card::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      right: -6px;
+      width: 25px;
+      height: 25px;
+      border-bottom: 2px solid #bc13fe;
+      border-right: 2px solid #bc13fe;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      width: 25px;
+      height: 25px;
+      border-top: 2px solid #bc13fe;
+      border-left: 2px solid #bc13fe;
+    }
+
+    /* 
+      GALAXY STARFIELD ANIMATION 
+    */
+    .bg-shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
+      background: transparent;
+    }
+
+    /* Star Layers */
+    .star-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      animation: space-travel linear infinite;
+      background-image:
+        radial-gradient(1px 1px at 10% 10%, #fff, rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 20% 20%, #fff, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 30% 30%, #bc13fe, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 40% 40%, #fff, rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 50% 50%, #fff, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 60% 60%, #bc13fe, rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 70% 70%, #fff, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 80% 80%, #fff, rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 90% 90%, #bc13fe, rgba(0, 0, 0, 0));
+      background-size: 500px 500px;
+      opacity: 0.9;
+      /* Made Brighter */
+    }
+
+    .star-layer:nth-child(2) {
+      background-size: 300px 300px;
+      /* Different density */
+      animation-duration: 40s;
+      /* Slower/Faster */
+      opacity: 0.7;
+      /* Made Brighter */
+      transform: rotate(45deg);
+    }
+
+    .star-layer:nth-child(3) {
+      background-size: 800px 800px;
+      animation-duration: 100s;
+      opacity: 0.6;
+      /* Made Brighter */
+      transform: rotate(90deg);
+    }
+
+    /* Nebula/Galaxy Cloud Effect */
+    .nebula {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(188, 19, 254, 0.2), transparent 60%);
+      /* Slightly stronger tint */
+      animation: pulse-nebula 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes space-travel {
+      from {
+        background-position: 0 0;
+      }
+
+      to {
+        background-position: 0 1000px;
+      }
+    }
+
+    @keyframes pulse-nebula {
+      from {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+
+      to {
+        opacity: 0.9;
+        transform: scale(1.1);
+      }
+    }
+
+    /* Inputs */
+    input {
+      width: 100%;
+      background: #0a000a;
+      border: 1px solid #5a007a;
+      color: #bc13fe;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-family: inherit;
+      font-size: 1rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+      border-color: #bc13fe;
+      box-shadow: 0 0 8px rgba(188, 19, 254, 0.5);
+    }
+
+    input::placeholder {
+      color: #6a008a;
+    }
+
+    /* QR Area */
+    #qrBox {
+      margin-top: 10px;
+      min-height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px dashed #5a007a;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    #qrBox img {
+      border: 2px solid #bc13fe;
+      padding: 10px;
+      background: #0a000a;
+      box-shadow: 0 0 15px #bc13fe;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- GALAXY BACKGROUND -->
+  <div class="bg-shapes">
+    <div class="nebula"></div>
+    <div class="star-layer"></div>
+    <div class="star-layer"></div>
+    <div class="star-layer"></div>
+  </div>
+
+  <!-- HEADER TEXT (Always Visible) -->
+  <div class="header-container">
+    <div class="welcome-header">>> INITIALISING SCAN PROTOCOL...</div>
+    <div class="typewriter-text" id="typewriter"></div>
+  </div>
+
+  <!-- MAIN APPLICATION (Immediately Visible underneath) -->
+  <div id="app-container">
+    <h1>Scan To Connect</h1>
+    <p class="subtitle">SECURE CONTACT UPLINK ESTABLISHED</p>
+
+    <div class="card">
+      <input type="text" id="name" placeholder="IDENTIFIER [NAME]">
+      <input type="text" id="phone" placeholder="COMM_LINK [PHONE]" inputmode="numeric" pattern="[0-9]*">
+
+      <div id="qrBox">
+        <span style="font-size: 0.8em; opacity: 0.7;">[ WAITING FOR DATA INPUT... ]</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ===========================
+       LOGIC CONTROLLER
+       =========================== */
+
+    // DOM Elements
+    const typewriterElement = document.getElementById('typewriter');
+
+    const nameInput = document.getElementById("name");
+    const phoneInput = document.getElementById("phone");
+    const qrBox = document.getElementById("qrBox");
+
+    // --- 1. Typing Animation ---
+    const textToType = "Do you want to generate your digital identity?";
+    let charIndex = 0;
+
+    function typeLine() {
+      if (charIndex < textToType.length) {
+        typewriterElement.textContent += textToType.charAt(charIndex);
+        charIndex++;
+        // Faster typing
+        const randomSpeed = Math.floor(Math.random() * 30) + 20;
+        setTimeout(typeLine, randomSpeed);
+      }
+    }
+
+    // Start typing immediately
+    window.addEventListener('load', () => {
+      typeLine();
+    });
+
+    // --- 3. QR Code Logic ---
+    let qr;
+
+    function updateQR() {
+      const name = nameInput.value.trim();
+      const phone = phoneInput.value.replace(/[^0-9]/g, ""); // Clean phone just in case
+
+      qrBox.innerHTML = "";
+
+      if (name === "" && phone === "") {
+        qrBox.innerHTML = '<span style="font-size: 0.8em; opacity: 0.7;">[ WAITING FOR DATA INPUT... ]</span>';
+        return;
+      }
+
+      const data = `Name: ${name}\nPhone: ${phone}`;
+
+      // Generate QR
+      try {
+        qr = new QRCode(qrBox, {
+          text: data,
+          width: 180,
+          height: 180,
+          colorDark: "#bc13fe", // Neon Violet Dots
+          colorLight: "#0a000a", // Dark Background matching card
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      } catch (e) {
+        console.error("QR Error", e);
+      }
+    }
+
+    // Input Listeners
+    nameInput.addEventListener("input", updateQR);
+
+    phoneInput.addEventListener("input", (e) => {
+      // Enforce numeric only visually
+      e.target.value = e.target.value.replace(/[^0-9]/g, "");
+      if (e.target.value.length > 10) e.target.value = e.target.value.slice(0, 10);
+      updateQR();
+    });
+
+  </script>
+</body>
+
+</html>
